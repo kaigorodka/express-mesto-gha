@@ -1,8 +1,8 @@
-const User = require("../models/user.js");
-
-const { HTTP_STATUS_BAD_REQUEST } = require("http2").constants; //400
-const { HTTP_STATUS_NOT_FOUND } = require("http2").constants; //404
-const { HTTP_STATUS_INTERNAL_SERVER_ERROR } = require("http2").constants; //500
+const { HTTP_STATUS_BAD_REQUEST } = require('http2').constants;
+const { HTTP_STATUS_NOT_FOUND } = require('http2').constants;
+const { HTTP_STATUS_INTERNAL_SERVER_ERROR } = require('http2').constants;
+const mongoose = require('mongoose');
+const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -11,11 +11,11 @@ module.exports.getUsers = (req, res) => {
       if (err instanceof mongoose.Error.CastError) {
         res
           .status(HTTP_STATUS_BAD_REQUEST)
-          .send({ message: `Переданны некорректные данные` });
+          .send({ message: 'Переданны некорректные данные' });
       } else {
         res
           .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "Произошла ошибка" });
+          .send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -27,11 +27,11 @@ module.exports.getUserById = (req, res) => {
       if (err instanceof mongoose.Error.CastError) {
         res
           .status(HTTP_STATUS_NOT_FOUND)
-          .send({ message: `Пользователь по указанному _id не найден.` });
+          .send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res
           .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "Произошла ошибка" });
+          .send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -44,11 +44,11 @@ module.exports.createUser = (req, res) => {
       if (err instanceof mongoose.Error.CastError) {
         res
           .status(HTTP_STATUS_BAD_REQUEST)
-          .send({ message: `Переданны некорректные данные` });
+          .send({ message: 'Переданны некорректные данные' });
       } else {
         res
           .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "Произошла ошибка" });
+          .send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -62,7 +62,7 @@ module.exports.updateUser = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
-          message: `Переданы некорректные данные при обновлении профиля.`,
+          message: 'Переданы некорректные данные при обновлении профиля.',
         });
       } else if (err instanceof mongoose.Error.DocumentNotFoundError) {
         res.status(HTTP_STATUS_NOT_FOUND).send({
@@ -71,7 +71,7 @@ module.exports.updateUser = (req, res) => {
       } else {
         res
           .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "Произошла ошибка" });
+          .send({ message: 'Произошла ошибка' });
       }
     });
 };
@@ -82,7 +82,7 @@ module.exports.updateAvatar = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
-          message: `Переданы некорректные данные при обновлении профиля.`,
+          message: 'Переданы некорректные данные при обновлении профиля.',
         });
       } else if (err instanceof mongoose.Error.DocumentNotFoundError) {
         res.status(HTTP_STATUS_NOT_FOUND).send({
@@ -91,7 +91,7 @@ module.exports.updateAvatar = (req, res) => {
       } else {
         res
           .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "Произошла ошибка" });
+          .send({ message: 'Произошла ошибка' });
       }
     });
 };
