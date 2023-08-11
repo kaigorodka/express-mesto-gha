@@ -1,8 +1,10 @@
 const express = require('express');
+
 const mongoose = require('mongoose');
+
 const bodyParser = require('body-parser');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, BASE_PATH } = process.env;
 const app = express();
 const getUsersRouter = require('./routes/users');
 
@@ -27,5 +29,6 @@ app.use('/users', getUsersRouter);
 app.use('/cards', getCardsRouter);
 
 app.listen(PORT, () => {
-
+  console.log('Ссылка на сервер');
+  console.log(BASE_PATH);
 });
