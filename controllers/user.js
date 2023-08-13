@@ -24,10 +24,14 @@ module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         res
           .status(HTTP_STATUS_NOT_FOUND)
           .send({ message: 'Пользователь по указанному _id не найден.' });
+      } else if (err instanceof mongoose.Error.CastError) {
+        res
+          .status(HTTP_STATUS_BAD_REQUEST)
+          .send({ message: 'Некорректно введет id' });
       } else {
         res
           .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
@@ -78,7 +82,7 @@ module.exports.updateUser = (req, res) => {
 
 module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar: `${req.body.avatar}` })
-    .then((user) => res.send({ data: user }))
+    .then(() => res.send({ data: req.body.avatar }))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
