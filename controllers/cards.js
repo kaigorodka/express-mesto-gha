@@ -97,7 +97,7 @@ module.exports.deleteCard = (req, res) => {
           message: 'Карточка с указанным _id не найдена.',
         });
       } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
-        res.status(HTTP_STATUS_NOT_FOUND).send({
+        res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Переданы некорректные данные для постановки/снятии лайка.',
         });
       } else {
