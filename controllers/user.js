@@ -8,7 +8,7 @@ module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res
           .status(HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Переданны некорректные данные' });
@@ -24,7 +24,7 @@ module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res
           .status(HTTP_STATUS_NOT_FOUND)
           .send({ message: 'Пользователь по указанному _id не найден.' });
@@ -41,7 +41,7 @@ module.exports.createUser = (req, res) => {
   User.create({ name, avatar, about })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res
           .status(HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Переданны некорректные данные' });
@@ -60,7 +60,7 @@ module.exports.updateUser = (req, res) => {
   })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Переданы некорректные данные при обновлении профиля.',
         });
@@ -80,7 +80,7 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar: `${req.body.avatar}` })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Переданы некорректные данные при обновлении профиля.',
         });

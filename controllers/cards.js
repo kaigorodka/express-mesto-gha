@@ -14,7 +14,7 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Переданы некорректные данные для постановки/снятии лайка.',
         });
@@ -38,7 +38,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Переданы некорректные данные для постановки/снятии лайка.',
         });
@@ -59,7 +59,7 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Переданы некорректные данные при создании карточки.',
         });
@@ -75,7 +75,7 @@ module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Переданы некорректные данные при создании карточки.',
         });
@@ -91,7 +91,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError) {
+      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_NOT_FOUND).send({
           message: 'Карточка с указанным _id не найдена.',
         });
