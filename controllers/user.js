@@ -21,7 +21,7 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findById(req.params.userId)
+  User.findById(req.params.userId, { new: true, runValidators: true })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
@@ -42,7 +42,7 @@ module.exports.getUserById = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, avatar, about } = req.body;
-  User.create({ name, avatar, about })
+  User.create({ name, avatar, about }, { new: true, runValidators: true })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
@@ -61,8 +61,8 @@ module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, {
     name: `${req.body.name}`,
     about: `${req.body.about}`,
-  })
-    .then((user) => res.send({ data: user }))
+  }, { new: true, runValidators: true })
+    .then((updateUser) => res.send(updateUser))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({
@@ -81,8 +81,8 @@ module.exports.updateUser = (req, res) => {
 };
 
 module.exports.updateAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, { avatar: `${req.body.avatar}` })
-    .then(() => res.send({ data: req.body.avatar }))
+  User.findByIdAndUpdate(req.user._id, { avatar: `${req.body.avatar}` }, { new: true, runValidators: true })
+    .then((updateAvatar) => res.send(updateAvatar))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_BAD_REQUEST).send({

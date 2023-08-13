@@ -7,10 +7,8 @@ const Card = require('../models/card');
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    {
-      new: true,
-    },
+    { $addToSet: { likes: req.user._id } },
+    { new: true, runValidators: true },
   )
     .then((card) => res.send({ data: card }))
     .catch((err) => {
@@ -33,8 +31,8 @@ module.exports.likeCard = (req, res) => {
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true },
+    { $pull: { likes: req.user._id } },
+    { new: true, runValidators: true },
   )
     .then((card) => res.send({ data: card }))
     .catch((err) => {
@@ -56,7 +54,7 @@ module.exports.dislikeCard = (req, res) => {
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  Card.create({ name, link })
+  Card.create({ name, link }, { new: true, runValidators: true })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
@@ -88,7 +86,7 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId, { new: true, runValidators: true })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
