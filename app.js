@@ -1,3 +1,5 @@
+const { HTTP_STATUS_NOT_FOUND } = require('http2').constants;
+
 const express = require('express');
 
 const mongoose = require('mongoose');
@@ -27,7 +29,11 @@ app.use((req, res, next) => {
 
 app.use('/users', getUsersRouter);
 app.use('/cards', getCardsRouter);
-
+app.use('*', (req, res, next) => {
+  next(res.status(HTTP_STATUS_NOT_FOUND).send({
+    message: 'Некорректный адресс',
+  }));
+});
 app.listen(PORT, () => {
   console.log('Ссылка на сервер');
   console.log(BASE_PATH);
