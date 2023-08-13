@@ -88,7 +88,7 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId, { new: true, runValidators: true })
+  Card.findByIdAndRemove(req.params.cardId, { new: true })
     .orFail()
     .then((card) => res.send({ data: card }))
     .catch((err) => {
