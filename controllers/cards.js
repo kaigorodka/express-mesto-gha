@@ -13,13 +13,13 @@ module.exports.likeCard = (req, res) => {
     .orFail()
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
-        res.status(HTTP_STATUS_BAD_REQUEST).send({
-          message: 'Переданы некорректные данные для постановки/снятии лайка.',
-        });
-      } else if (err instanceof mongoose.Error.DocumentNotFoundError) {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         res.status(HTTP_STATUS_NOT_FOUND).send({
           message: 'Передан несуществующий _id карточки.',
+        });
+      } else if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
+        res.status(HTTP_STATUS_BAD_REQUEST).send({
+          message: 'Переданы некорректные данные для постановки/снятии лайка.',
         });
       } else {
         res
