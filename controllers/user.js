@@ -42,7 +42,7 @@ module.exports.getUserById = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, avatar, about } = req.body;
-  User.create({ name, avatar, about }, { new: true, runValidators: true })
+  User.create({ name, avatar, about })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
