@@ -38,13 +38,13 @@ module.exports.dislikeCard = (req, res) => {
     .orFail()
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
-        res.status(HTTP_STATUS_BAD_REQUEST).send({
-          message: 'Переданы некорректные данные для постановки/снятии лайка.',
-        });
-      } else if (err instanceof mongoose.Error.DocumentNotFoundError) {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         res.status(HTTP_STATUS_NOT_FOUND).send({
           message: 'Передан несуществующий _id карточки.',
+        });
+      } else if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
+        res.status(HTTP_STATUS_BAD_REQUEST).send({
+          message: 'Переданы некорректные данные для постановки/снятии лайка.',
         });
       } else {
         res
@@ -92,14 +92,18 @@ module.exports.deleteCard = (req, res) => {
     .orFail()
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         res.status(HTTP_STATUS_NOT_FOUND).send({
           message: 'Карточка с указанным _id не найдена.',
         });
-      } else if (err instanceof mongoose.Error.CastError) {
-        res.status(HTTP_STATUS_BAD_REQUEST).send({
-          message: 'Карточка с указанным _id не найдена.',
+      } else if (err instanceof mongoose.Error.ValidationError || mongoose.Error.CastError) {
+        res.status(HTTP_STATUS_NOT_FOUND).send({
+          message: 'Переданы некорректные данные для постановки/снятии лайка.',
         });
+      } else {
+        res
+          .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
+          .send({ message: 'Произошла ошибка' });
       }
     });
 };
