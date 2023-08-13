@@ -89,8 +89,12 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId, { new: true, runValidators: true })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         res.status(HTTP_STATUS_NOT_FOUND).send({
+          message: 'Карточка с указанным _id не найдена.',
+        });
+      } else if (err instanceof mongoose.Error.CastError) {
+        res.status(HTTP_STATUS_BAD_REQUEST).send({
           message: 'Карточка с указанным _id не найдена.',
         });
       }
