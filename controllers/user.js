@@ -45,7 +45,7 @@ module.exports.getUserById = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, avatar, about } = req.body;
   User.create({ name, avatar, about })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
         res
@@ -64,6 +64,7 @@ module.exports.updateUser = (req, res) => {
     name: `${req.body.name}`,
     about: `${req.body.about}`,
   }, { new: true, runValidators: true })
+    .orFail()
     .then((updateUser) => res.send(updateUser))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
@@ -84,6 +85,7 @@ module.exports.updateUser = (req, res) => {
 
 module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar: `${req.body.avatar}` }, { new: true, runValidators: true })
+    .orFail()
     .then((updateAvatar) => res.send(updateAvatar))
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError || mongoose.Error.ValidationError) {
