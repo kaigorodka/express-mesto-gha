@@ -1,3 +1,4 @@
+const validator = require('validator');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -6,17 +7,35 @@ const userSchema = new mongoose.Schema({
     type: String, // имя — это строка
     minlength: 2, // минимальная длина имени — 2 символа
     maxlength: 30, // а максимальная — 30 символов
-    required: true,
+    default: 'Жак-Ив Кусто',
   },
   avatar: {
     type: String,
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator(v) {
+        return /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/.test(v);
+      },
+    },
   },
   about: {
     type: String,
     minlength: 2, // минимальная длина имени — 2 символа
     maxlength: 30, // а максимальная — 30 символов
+    default: 'Исследователь',
+  },
+  email: {
+    type: String,
+    unique: true,
     required: true,
+    validate: {
+      validator: () => validator.isEmail,
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
   },
 });
 

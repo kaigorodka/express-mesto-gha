@@ -12,6 +12,10 @@ const getUsersRouter = require('./routes/users');
 
 const getCardsRouter = require('./routes/cards');
 
+const login = require('./controllers/user');
+const createUser = require('./controllers/user');
+const auth = require('./middlewares/auth');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -19,14 +23,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64cf741b12a85cd23112153a', // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
+app.post('/signin', login);
+app.post('/signup', createUser);
 
-  next();
-});
-
+app.use(auth);
 app.use('/users', getUsersRouter);
 app.use('/cards', getCardsRouter);
 app.use('*', (req, res, next) => {
